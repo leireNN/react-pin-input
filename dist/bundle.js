@@ -783,7 +783,6 @@ var PinInput = function (_Component) {
     value: function focus() {
       if (this.props.length) this.elements[0].focus();
     }
-
     /**
      */
 
@@ -796,18 +795,14 @@ var PinInput = function (_Component) {
           onChange = _props.onChange;
 
       var currentIndex = index;
-
       this.values[index] = value;
-
       // Set focus on next
       if (value.length === 1 && index < length - 1) {
         currentIndex += 1;
         this.elements[currentIndex].focus();
       }
-
       // Notify the parent
       var pin = this.values.join('');
-
       onChange(pin, currentIndex);
       if (pin.length === length) {
         onComplete(pin, currentIndex);
@@ -817,6 +812,7 @@ var PinInput = function (_Component) {
     key: 'onBackspace',
     value: function onBackspace(index) {
       if (index > 0) {
+        this.elements[index - 1].clear();
         this.elements[index - 1].focus();
       }
     }
@@ -870,7 +866,6 @@ PinInput.propTypes = {
   inputStyle: _propTypes2.default.object, // eslint-disable-line react/forbid-prop-types
   inputFocusStyle: _propTypes2.default.object // eslint-disable-line react/forbid-prop-types
 };
-
 PinInput.defaultProps = {
   initialValue: '',
   type: 'numeric',
@@ -884,7 +879,6 @@ PinInput.defaultProps = {
   inputStyle: {},
   inputFocusStyle: {}
 };
-
 exports.default = PinInput;
 
 /***/ }),
@@ -2939,7 +2933,6 @@ var styles = {
     boxShadow: 'none'
   }
 };
-
 /**
  */
 
@@ -2966,8 +2959,11 @@ var PinItem = function (_Component) {
   _createClass(PinItem, [{
     key: 'onKeyDown',
     value: function onKeyDown(e) {
-      if (e.keyCode === 8 && (!this.state.value || !this.state.value.length)) {
+      if (e.keyCode === 8) {
         this.props.onBackspace();
+        if (this.state.value.length && this.state.value) {
+          this.clear();
+        }
       }
     }
   }, {
@@ -3015,7 +3011,6 @@ var PinItem = function (_Component) {
       if (this.props.validate) {
         return this.props.validate(value);
       }
-
       if (this.props.type === 'numeric') {
         var numCode = value.charCodeAt(0);
         var isInteger = numCode >= '0'.charCodeAt(0) && numCode <= '9'.charCodeAt(0);
@@ -3043,7 +3038,6 @@ var PinItem = function (_Component) {
           secret = _props.secret;
 
       var inputType = type === 'numeric' ? 'tel' : type;
-
       return _react2.default.createElement('input', {
         className: 'pincode-input-text',
         onChange: this.onChange,
@@ -3078,14 +3072,12 @@ PinItem.propTypes = {
   inputStyle: _propTypes2.default.object.isRequired, // eslint-disable-line react/forbid-prop-types
   inputFocusStyle: _propTypes2.default.object.isRequired // eslint-disable-line react/forbid-prop-types
 };
-
 PinItem.defaultProps = {
   secret: false,
   type: 'numeric',
   inputMode: undefined,
   validate: undefined
 };
-
 exports.default = PinItem;
 
 /***/ })
